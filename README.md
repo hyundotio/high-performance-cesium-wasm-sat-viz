@@ -11,6 +11,9 @@ https://hp-sat-viz.vercel.app <- Live demo
 Setup an env var called `NEXT_PUBLIC_SITE_URL` with your running instance's public URL. For local, I use `NEXT_PUBLIC_SITE_URL='http://127.0.0.1:3000'`
 Then I just point Vercel to this repo to build and run automatically. 
 
+#### What are some dots that are moving really really fast?
+They're likely decayed objects; i.e., dots that shouldn't be there that I was too lazy to filter out.
+
 #### CesiumComponent.tsx has the goods
 If you want to check out how this works, check out `./Components/CesiumComponent.tsx` I tried to document much as possible!
 
@@ -29,6 +32,7 @@ I won't go into every method that I've tried but every method I've tried has res
 With all the work above, it is very important to utilize the dynamically called Cesium and not import individual functions like you would normally. Also it is very important to type Cesium specific things with `import type { xyz } from 'cesium'` not `import { xyz } from 'cesium'`
 
 ### I hope this helps you. Space is hard.
+
 
 ### Credits
 Thank you to the U.S. Gov for the TLE data. 
