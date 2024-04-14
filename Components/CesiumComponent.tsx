@@ -2,7 +2,7 @@
 
 import React from 'react'
 import type { CesiumType } from '../types/cesium'
-import { PointPrimitive, PointPrimitiveCollection, PrimitiveCollection, type Viewer } from 'cesium';
+import type { Viewer, PointPrimitive, PointPrimitiveCollection } from 'cesium';
 import type { TLE } from '../types/TLE';
 //NOTE: This is required to get the stylings for default Cesium UI and controls
 import 'cesium/Build/Cesium/Widgets/widgets.css';
