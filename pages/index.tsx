@@ -19,7 +19,7 @@ export const Home: NextPage = () => {
     console.log(TLEstr);
     if (typeof TLEstr === 'string' && TLEstr.length) {
       //Get string; then turn string into array
-      const TLEArr = TLEstr.split('\r\n');
+      const TLEArr = TLEstr.split('\n');
       const TLEArrLastItemIdx = TLEArr.length - 1;
       console.log(TLEArr);
       
@@ -38,7 +38,7 @@ export const Home: NextPage = () => {
         const newTLEs: TLE[] = [];
         for (let i = 0; i < TLEPostProcessedArrLen; i+=3) {
           //A TLE (3LE) has 3 lines. Iterate every 3
-          const TLEGroup = [TLEArr[i], TLEArr[i+1], TLEArr[i+2]];
+          const TLEGroup = [TLEArr[i].replace('\r',''), TLEArr[i+1].replace('\r',''), TLEArr[i+2].replace('\r','')];
           newTLEs.push(TLEGroup);
         }
         console.log(newTLEs);
