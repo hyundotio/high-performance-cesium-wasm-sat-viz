@@ -17,6 +17,7 @@ export const Home: NextPage = () => {
   React.useEffect(() => {
     //On load, download the data client-side. It's too heavy to do on server-side.
     downloadTLEs().then((res) => {
+      console.log(res);
       if (typeof res === 'string' && res.length) {
         //Get string; then turn string into array
         const TLEArr = res.split('\r\n');
