@@ -1,16 +1,18 @@
 
-# Cesium in Next.js 14 (Page router) with TypeScript
+# High-performance Satellite Visualization using Cesium.js and WASM SGP4
 
 ## Blah blah
 You know what to do... `npm install` and `npm run dev` or `npm run build` then `npm run start` - Yarn probably works too...
 
 ## Important bits
-https://nextjs-pr-cesium.vercel.app <- Live demo
-
-https://github.com/hyundotio/nextjs-ts-cesium-example <- Click here for App router example
+https://hp-sat-viz.vercel.app <- Live demo
 
 #### Demo
-Literally just pointed Vercel to this repo to build and run automatically. 
+Setup an env var called `NEXT_PUBLIC_SITE_URL` with your running instance's public URL. For local, I use `NEXT_PUBLIC_SITE_URL='http://127.0.0.1:3000'`
+Then I just point Vercel to this repo to build and run automatically. 
+
+#### CesiumComponent.tsx has the goods
+If you want to check out how this works, check out `./Components/CesiumComponent.tsx` I tried to document much as possible!
 
 #### next.config.js
 Cesium requires some files to be copied in a publicly accessible folder. This is achieved with CopyWebPackPlugin... *BUT* each copy statements requires `info: { minimized: true }`
@@ -26,5 +28,5 @@ With all the work above, it is very important to utilize the dynamically called 
 ### I hope this helps you save some time... Cesium is a PITA to get started.
 
 ### Credits
-Thank you https://github.com/willwill96 for helping me get started
+Thank you to the U.S. Gov for the TLE data. 
 and please give this repo a star if it was helpful!
