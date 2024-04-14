@@ -5,45 +5,51 @@ import CesiumWrapper from "../Components/CesiumWrapper"
 import type { TLE } from "../types/TLE";
 import React from "react";
 
-const downloadTLEs = async () => {
-  //Do some fancy thing on your own to get your own up-to-date TLEs.
-  //You can get TLEs from space-track.org, celestrak, or other sources.
-  return await (await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/tle_04_13_2024.txt`)).text();
-}
-
 export const Home: NextPage = () => {
   const [TLEs, setTLEs] = React.useState<TLE[]>([]);
+  const [isDataLoaded, setDataIsLoaded]= React.useState(false);
+
+  const getTLEs = React.useCallback(async() => {
+    //Do some fancy thing on your own to get your own up-to-date TLEs.
+    //You can get TLEs from space-track.org, celestrak, or other sources.
+    //For this demo, we're downloading from a static source.
+    const getTLE = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/tle_04_13_2024.txt`);
+    const TLEstr = await getTLE.text();
+
+    if (typeof TLEstr === 'string' && TLEstr.length) {
+      //Get string; then turn string into array
+      const TLEArr = TLEstr.split('\r\n');
+      const TLEArrLen = TLEArr.length;
+      const TLEArrLastItemIdx = TLEArrLen - 1;
+      
+      //This is to trim any empty string array items.
+      if (TLEArr[0] === ''){
+        TLEArr.splice(0, 1);
+      }
+      if (TLEArr[TLEArrLastItemIdx] === ''){
+        TLEArr.splice(TLEArrLastItemIdx, 1);
+      }
+
+      //Making sure the entire array is divisible by 3 (I.e., they're multiple 3LEs)
+      if (TLEArr.length && TLEArr.length % 3 === 0) {
+        const newTLEs: TLE[] = [];
+        for (let i = 0; i < TLEArrLen; i+=3) {
+          //A TLE (3LE) has 3 lines. Iterate every 3
+          const TLEGroup = [TLEArr[i], TLEArr[i+1], TLEArr[i+2]];
+          newTLEs.push(TLEGroup);
+        }
+        setDataIsLoaded(true);
+        setTLEs(newTLEs);
+      }
+    }
+  }, []);
   
   React.useEffect(() => {
     //On load, download the data client-side. It's too heavy to do on server-side.
-    downloadTLEs().then((res) => {
-      if (typeof res === 'string' && res.length) {
-        //Get string; then turn string into array
-        const TLEArr = res.split('\r\n');
-        const TLEArrLen = TLEArr.length;
-        const TLEArrLastItemIdx = TLEArrLen - 1;
-        
-        //This is to trim any empty string array items.
-        if (TLEArr[0] === ''){
-          TLEArr.splice(0, 1);
-        }
-        if (TLEArr[TLEArrLastItemIdx] === ''){
-          TLEArr.splice(TLEArrLastItemIdx, 1);
-        }
-
-        //Making sure the entire array is divisible by 3 (I.e., they're multiple 3LEs)
-        if (TLEArr.length && TLEArr.length % 3 === 0) {
-          const newTLEs: TLE[] = [];
-          for (let i = 0; i < TLEArrLen; i+=3) {
-            //A TLE (3LE) has 3 lines. Iterate every 3
-            const TLEGroup = [TLEArr[i], TLEArr[i+1], TLEArr[i+2]];
-            newTLEs.push(TLEGroup);
-          }
-          setTLEs(newTLEs);
-        }
-      }
-    });
-  }, []);
+    if (!isDataLoaded) {
+      getTLEs();
+    }
+  }, [isDataLoaded]);
 
 
   const websiteTitle = 'High-performance Satellite Visualization';
