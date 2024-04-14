@@ -25,7 +25,7 @@ I won't go into every method that I've tried but every method I've tried has res
 #### TypeScript shenanigans with Cesium.js
 With all the work above, it is very important to utilize the dynamically called Cesium and not import individual functions like you would normally. Also it is very important to type Cesium specific  things with `import type { xyz } from 'cesium'` not `import { xyz } from 'cesium'`
 
-### I hope this helps you save some time... Cesium is a PITA to get started.
+### I hope this helps you. Space is hard.
 
 ### Credits
 Thank you to the U.S. Gov for the TLE data. 
