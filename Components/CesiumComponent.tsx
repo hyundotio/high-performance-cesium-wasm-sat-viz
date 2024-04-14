@@ -38,7 +38,7 @@ export const CesiumComponent: React.FunctionComponent<{
         if (cesiumViewer.current === null && cesiumContainerRef.current) {
             //NOTE: Always utilize CesiumJs; do not import them from "cesium"
             cesiumViewer.current = new CesiumJs.Viewer(cesiumContainerRef.current);
-            
+
             //Setting up Cesium to animate...
             cesiumViewer.current.clock.clockStep = CesiumJs.ClockStep.SYSTEM_CLOCK_MULTIPLIER;
             cesiumViewer.current.clock.canAnimate = true;
@@ -55,6 +55,9 @@ export const CesiumComponent: React.FunctionComponent<{
             //Limiting the zoom
             cesiumViewer.current.scene.screenSpaceCameraController.minimumZoomDistance = (6378.135 * 1000) + 500000; //Earth radius in meters + 500km
             cesiumViewer.current.scene.screenSpaceCameraController.maximumZoomDistance = 0.5E9; //Enough to view very large orbits
+
+            //Enable lighting
+            cesiumViewer.current.scene.globe.enableLighting = true;
         }
         //Load SGP4 Propagator
         if (sgp4Module === null){
