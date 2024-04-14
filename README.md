@@ -14,6 +14,9 @@ Then I just point Vercel to this repo to build and run automatically.
 #### CesiumComponent.tsx has the goods
 If you want to check out how this works, check out `./Components/CesiumComponent.tsx` I tried to document much as possible!
 
+#### WASM
+I am using this WASM package https://github.com/wasmerio/sgp4; However, I did edit how the wasm package is fetched. Others should be same.
+
 #### next.config.js
 Cesium requires some files to be copied in a publicly accessible folder. This is achieved with CopyWebPackPlugin... *BUT* each copy statements requires `info: { minimized: true }`
 
@@ -23,10 +26,11 @@ It is just cleaner to have Cesium related components as client only components. 
 I won't go into every method that I've tried but every method I've tried has resulted in browser errors, Next.js errors, and/or Vercel (500 status filesystem) errors. Using the CopyWebPackPlugin, wrapping it in a dynamic component, and then finally importing the Cesium files via `import` inside a `useEffect` yielded 100% success.
 
 #### TypeScript shenanigans with Cesium.js
-With all the work above, it is very important to utilize the dynamically called Cesium and not import individual functions like you would normally. Also it is very important to type Cesium specific  things with `import type { xyz } from 'cesium'` not `import { xyz } from 'cesium'`
+With all the work above, it is very important to utilize the dynamically called Cesium and not import individual functions like you would normally. Also it is very important to type Cesium specific things with `import type { xyz } from 'cesium'` not `import { xyz } from 'cesium'`
 
 ### I hope this helps you. Space is hard.
 
 ### Credits
 Thank you to the U.S. Gov for the TLE data. 
+Thank you https://github.com/wasmerio/sgp4 for sgp4 wasm.
 and please give this repo a star if it was helpful!
