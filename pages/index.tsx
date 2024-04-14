@@ -7,7 +7,6 @@ import React from "react";
 
 export const Home: NextPage = () => {
   const [TLEs, setTLEs] = React.useState<TLE[]>([]);
-  const [isDataLoaded, setDataIsLoaded]= React.useState(false);
 
   const getAndProcessTLEs = React.useCallback(async() => {
     //Do some fancy thing on your own to get your own up-to-date TLEs.
@@ -16,12 +15,10 @@ export const Home: NextPage = () => {
     const getTLE = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/tle_04_13_2024.txt`);
     const TLEstr = await getTLE.text();
 
-    console.log(TLEstr);
     if (typeof TLEstr === 'string' && TLEstr.length) {
       //Get string; then turn string into array
       const TLEArr = TLEstr.split('\n');
       const TLEArrLastItemIdx = TLEArr.length - 1;
-      console.log(TLEArr);
       
       //This is to trim any empty string array items.
       if (TLEArr[0] === ''){
@@ -31,8 +28,6 @@ export const Home: NextPage = () => {
         TLEArr.splice(TLEArrLastItemIdx, 1);
       }
       const TLEPostProcessedArrLen = TLEArr.length;
-      console.log(TLEArr);
-      console.log(TLEPostProcessedArrLen);
       //Making sure the entire array is divisible by 3 (I.e., they're multiple 3LEs)
       if (TLEArr.length && TLEArr.length % 3 === 0) {
         const newTLEs: TLE[] = [];
@@ -41,19 +36,17 @@ export const Home: NextPage = () => {
           const TLEGroup = [TLEArr[i].replace('\r',''), TLEArr[i+1].replace('\r',''), TLEArr[i+2].replace('\r','')];
           newTLEs.push(TLEGroup);
         }
-        console.log(newTLEs);
-        setDataIsLoaded(true);
         setTLEs(newTLEs);
       }
     }
-  }, [setDataIsLoaded, setTLEs]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   
   React.useEffect(() => {
     //On load, download the data client-side. It's too heavy to do on server-side.
-    if (!isDataLoaded) {
-      getAndProcessTLEs();
-    }
-  }, [isDataLoaded]);
+    getAndProcessTLEs();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  });
 
 
   const websiteTitle = 'High-performance Satellite Visualization';
@@ -86,9 +79,7 @@ export const Home: NextPage = () => {
         >
           GitHub Source link
         </a>
-        {
-          TLEs.length ? <CesiumWrapper TLEs={TLEs} /> : null
-        }
+        <CesiumWrapper TLEs={TLEs} />
       </main>
     </>
   );
