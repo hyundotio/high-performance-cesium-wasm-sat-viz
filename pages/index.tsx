@@ -38,11 +38,12 @@ export const Home: NextPage = () => {
           const TLEGroup = [TLEArr[i], TLEArr[i+1], TLEArr[i+2]];
           newTLEs.push(TLEGroup);
         }
+        console.log(newTLEs);
         setDataIsLoaded(true);
         setTLEs(newTLEs);
       }
     }
-  }, []);
+  }, [setDataIsLoaded, setTLEs]);
   
   React.useEffect(() => {
     //On load, download the data client-side. It's too heavy to do on server-side.
