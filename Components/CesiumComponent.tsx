@@ -203,29 +203,32 @@ export const CesiumComponent: React.FunctionComponent<{
                     }
 
                     //This is needed to translate the output from the SGP4 propgator to proper rotation frame at each animation frame (because it is time dependant);
-                    const matrixTranslation = CesiumJs.Matrix4.fromRotationTranslation(CesiumJs.Transforms.computeTemeToPseudoFixedMatrix(currentJDate));
-                    //Apply translation to PointsCollection as it will apply the translation to all points...
-                    pointsCollectionRef.current.modelMatrix = matrixTranslation;
-                    
-                    //Loop through all of points and start updating their positions... (i.e., propagate them);
-                    for (let i = 0; i < pointsCollectionPrimitivesLen; i++) {
-                        //The two arrays have synchronized indexes from previous .push/.add
-                        const point = pointsCollectionPrimitivesRef.current[i];
-                        const metadata = pointsMetadataRef.current[i];
-                        //Convert JulianDate to Unix Timestamp
-                        const currentUnitxTs = (((currentJDate.dayNumber - 2440587.5) * 86400) + (currentJDate.secondsOfDay)) * 1000;
-                        const minsFromEpoch = (currentUnitxTs - pointsMetadataRef.current[i].TLEEpochTs) / 60000;
-                        //Now we finally generate a new cartesian positions for this satellite...
-                        const newPropagationPoint = metadata.sgp4Constants.propagate(minsFromEpoch);
-                        //Check if propagation went through ok...
-                        if (newPropagationPoint.tag === 'ok') {
-                            const pointPosition = newPropagationPoint.val.position;
-                            //Assign new cartesian3 to the point. Convert from km to m
-                            point.position = new CesiumJs.Cartesian3(
-                                pointPosition[0] * 1000,
-                                pointPosition[1] * 1000,
-                                pointPosition[2] * 1000
-                            )
+                    const matrixTranslation = CesiumJs.Matrix4.fromRotationTranslation(CesiumJs.Transforms.computeIcrfToFixedMatrix(currentJDate));
+
+                    if (matrixTranslation) {
+                        //Apply translation to PointsCollection as it will apply the translation to all points...
+                        pointsCollectionRef.current.modelMatrix = matrixTranslation;
+                        
+                        //Loop through all of points and start updating their positions... (i.e., propagate them);
+                        for (let i = 0; i < pointsCollectionPrimitivesLen; i++) {
+                            //The two arrays have synchronized indexes from previous .push/.add
+                            const point = pointsCollectionPrimitivesRef.current[i];
+                            const metadata = pointsMetadataRef.current[i];
+                            //Convert JulianDate to Unix Timestamp
+                            const currentUnitxTs = (((currentJDate.dayNumber - 2440587.5) * 86400) + (currentJDate.secondsOfDay)) * 1000;
+                            const minsFromEpoch = (currentUnitxTs - pointsMetadataRef.current[i].TLEEpochTs) / 60000;
+                            //Now we finally generate a new cartesian positions for this satellite...
+                            const newPropagationPoint = metadata.sgp4Constants.propagate(minsFromEpoch);
+                            //Check if propagation went through ok...
+                            if (newPropagationPoint.tag === 'ok') {
+                                const pointPosition = newPropagationPoint.val.position;
+                                //Assign new cartesian3 to the point. Convert from km to m
+                                point.position = new CesiumJs.Cartesian3(
+                                    pointPosition[0] * 1000,
+                                    pointPosition[1] * 1000,
+                                    pointPosition[2] * 1000
+                                )
+                            }
                         }
                     }
                 }
