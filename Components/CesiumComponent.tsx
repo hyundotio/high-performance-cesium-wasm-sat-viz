@@ -12,8 +12,8 @@ import 'cesium/Build/Cesium/Widgets/widgets.css';
 export interface SatMetadata {
   satName: string;
   noradID: string;
-  sgp4Constants: any;
-  sgp4Elements: any;
+  sgp4Constants: Constants;
+  sgp4Elements: Elements;
   TLEEpochJulian: JulianDate;
   idx: number;
 }
